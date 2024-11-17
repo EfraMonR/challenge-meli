@@ -1,4 +1,3 @@
-import mysql.connector
 from fastapi import HTTPException
 from app.dtos.request_data_base import RequestDataBase
 from app.infrastructure.database_persistence_connection import DataBasePersistenceConnection as dbpc
