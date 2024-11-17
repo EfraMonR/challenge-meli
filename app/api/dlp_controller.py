@@ -1,7 +1,9 @@
 from fastapi import APIRouter
+from fastapi import Request
+from fastapi.responses import HTMLResponse
 from app.dtos.request_data_base import RequestDataBase
 from app.services.data_persistence_service import database_persistence
-from app.services.data_clasification_service import database_clasification, get_last_scan
+from app.services.data_clasification_service import database_clasification, get_last_scan, get_data_render
 
 router = APIRouter()
 
@@ -16,3 +18,7 @@ async def data_clasification(id_database):
 @router.get(path = "/api/v1/database/scan/", status_code = 201)
 async def get_classification_database(id_database):
     return get_last_scan(id_database)
+
+@router.get("/api/v1/database/view", response_class = HTMLResponse)
+async def get_classification_page(request: Request, id_database: int):
+    return get_data_render(request, id_database) 

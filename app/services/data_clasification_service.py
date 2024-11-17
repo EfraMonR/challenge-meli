@@ -1,10 +1,14 @@
 import re
 from datetime import datetime
 from fastapi import HTTPException
+from fastapi.templating import Jinja2Templates
+from fastapi import Request
 from app.repositories.database_clasification_repository import DataBaseClasificationRepository as dbcr
 from app.models.database_persistence_entity import DatabasePersistenceEntity
 from app.dtos.response_get_classification import ResponseGetClassification
 from app.utils.encryption import EncryptionUtils
+
+templates = Jinja2Templates(directory="app/templates")
 
 def database_clasification(id_database):
     validation_database = dbcr.check_database_existence(id_database)
@@ -115,4 +119,12 @@ def get_last_scan(id_database):
         raise HTTPException(status_code = 400, detail="The identifier is not associated with any existing database")
 
     
-    
+def get_data_render(request: Request, id_database):
+    response = get_last_scan(id_database)
+    historic_scan = dbcr.search_historic_scan(id_database)
+
+    return templates.TemplateResponse("index.html", {
+        "request": request,
+        "response": response,
+        "historic_scan": historic_scan
+    })    

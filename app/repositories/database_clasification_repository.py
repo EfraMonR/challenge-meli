@@ -236,7 +236,6 @@ class DataBaseClasificationRepository():
             return historic_scan_list
         except Error as e:
             raise HTTPException(status_code=500, detail="Error to search record in table") from e
-
         except Exception as e:
             raise HTTPException(status_code=404, detail=f"{e}") from e
     
