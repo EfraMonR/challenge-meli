@@ -3,6 +3,7 @@ from datetime import datetime
 from fastapi import HTTPException
 from app.repositories.database_clasification_repository import DataBaseClasificationRepository as dbcr
 from app.models.database_persistence_entity import DatabasePersistenceEntity
+from app.dtos.response_get_classification import ResponseGetClassification
 from app.utils.encryption import EncryptionUtils
 
 def database_clasification(id_database):
@@ -29,7 +30,7 @@ def database_clasification(id_database):
         
         return {"the historical classification record has been saved with id": f"{id_saved_scan}"}
     else:
-        raise HTTPException(status_code = 404, detail="The identifier is not associated with any existing database")
+        raise HTTPException(status_code = 400, detail="The identifier is not associated with any existing database")
 
 def database_filtered(decrypted_data):
     database_names = dbcr.get_database_names(decrypted_data)
@@ -96,3 +97,22 @@ def save_scan(id_database, classification):
         dbcr.update_historic_scan(id_database)
     
     return dbcr.insert_historic_scan(id_database, classification, date)
+
+def get_last_scan(id_database):
+    validation_database = dbcr.check_database_existence(id_database)
+    if(validation_database is not None):
+        last_scan = dbcr.search_historic_scan(id_database, 0)
+        response = [
+            {
+                key: value 
+                for key, value in ResponseGetClassification.from_entity(scan).__dict__.items() 
+                if key not in ['deleted', 'id']
+            }
+            for scan in last_scan
+        ]
+        return response
+    else:
+        raise HTTPException(status_code = 400, detail="The identifier is not associated with any existing database")
+
+    
+    
