@@ -269,3 +269,25 @@ class DataBaseClasificationRepository():
 
         except Exception as e:
             raise HTTPException(status_code=404, detail=f"{e}") from e
+        
+    def insert_information_classification(data_type, expression):
+        try:
+            db_connection = DataBaseDlpConnection()
+            main_db_connection = db_connection.connect()
+            cursor = main_db_connection.cursor()
+            
+            insert_query = """
+                INSERT INTO information_classification (information_type, information_expression)
+                VALUES (%s, %s);
+            """
+            cursor.execute(insert_query, (data_type, expression))
+            main_db_connection.commit()
+            cursor.close()
+            main_db_connection.close()
+            
+            return {"message": "Record insert successfully."}
+        except Error as e:
+            raise HTTPException(status_code=500, detail=f"{e}") from e
+
+        except Exception as e:
+            raise HTTPException(status_code=404, detail=f"{e}") from e    

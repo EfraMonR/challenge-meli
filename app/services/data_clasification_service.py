@@ -6,6 +6,7 @@ from fastapi import Request
 from app.repositories.database_clasification_repository import DataBaseClasificationRepository as dbcr
 from app.models.database_persistence_entity import DatabasePersistenceEntity
 from app.dtos.response_get_classification import ResponseGetClassification
+from app.dtos.request_information_classification import RequestInformationClassification
 from app.utils.encryption import EncryptionUtils
 
 templates = Jinja2Templates(directory="app/templates")
@@ -127,4 +128,9 @@ def get_data_render(request: Request, id_database):
         "request": request,
         "response": response,
         "historic_scan": historic_scan
-    })    
+    }) 
+    
+def insert_information_classification(request: RequestInformationClassification):
+    uppercase_expression = request.information_expression.upper()
+    return dbcr.insert_information_classification(request.information_type, uppercase_expression)
+    
