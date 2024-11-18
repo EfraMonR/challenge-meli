@@ -3,7 +3,7 @@ from app.repositories.database_persistence_repository import DataBasePersistence
 from app.models.database_persistence_entity import DatabasePersistenceEntity
 from app.utils.encryption import EncryptionUtils
 
-def database_persistence(request: RequestDataBase):
+def database_persistence(request: RequestDataBase, user_id: int):
     validation_persistence = dbpr.check_database_persistence(request)
 
     if(validation_persistence):
@@ -19,7 +19,7 @@ def database_persistence(request: RequestDataBase):
             port = encrypted_port
         )
 
-        id_persistence = dbpr.insert_data_persistence(encrypted_data)
+        id_persistence = dbpr.insert_data_persistence(encrypted_data, user_id)
         return {"The credentials of database are saved correct with id: ": f"{id_persistence}"}
     else:
         return validation_persistence

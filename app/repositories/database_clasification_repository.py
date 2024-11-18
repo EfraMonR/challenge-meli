@@ -93,7 +93,7 @@ class DataBaseClasificationRepository():
             cursor = main_db_connection.cursor()
 
             query = """
-                SELECT id, information_type, information_expression
+                SELECT id, information_type, information_expression, id_user
                 FROM information_classification
             """
             cursor.execute(query)
@@ -106,7 +106,8 @@ class DataBaseClasificationRepository():
                 information_classifications.append(InformationClassificationEntity(
                     id = result[0],
                     information_type = result[1],
-                    information_expression = result[2]
+                    information_expression = result[2],
+                    user_id = result[3],
                 ))
 
             return information_classifications
@@ -166,7 +167,7 @@ class DataBaseClasificationRepository():
         except Exception as e:
             raise HTTPException(status_code=404, detail=f"{e}") from e
         
-    def insert_historic_scan(id_database: int, classification: dict, date_scan: str):
+    def insert_historic_scan(id_database: int, classification: dict, date_scan: str, id_user: int):
         try:
             date_scan_obj = datetime.strptime(date_scan, '%Y-%m-%d %H:%M:%S')
             classification_str = json.dumps(classification)
@@ -175,7 +176,8 @@ class DataBaseClasificationRepository():
                 date_scan = date_scan_obj,
                 classification = classification_str,
                 id_database = id_database,
-                deleted = 0
+                deleted = 0,
+                user_id = id_user
             )
 
             db_connection = DataBaseDlpConnection()
@@ -183,11 +185,11 @@ class DataBaseClasificationRepository():
             cursor = main_db_connection.cursor()
 
             insert_query = """
-                INSERT INTO historic_scan (date_scan, classification, id_database, deleted)
-                VALUES (%s, %s, %s, %s)
+                INSERT INTO historic_scan (date_scan, classification, id_database, deleted, id_user)
+                VALUES (%s, %s, %s, %s, %s)
             """
 
-            cursor.execute(insert_query, (historic_scan.date_scan, historic_scan.classification, historic_scan.id_database, historic_scan.deleted))
+            cursor.execute(insert_query, (historic_scan.date_scan, historic_scan.classification, historic_scan.id_database, historic_scan.deleted, historic_scan.user_id))
             main_db_connection.commit()
             inserted_id = cursor.lastrowid
             cursor.close()
@@ -208,7 +210,7 @@ class DataBaseClasificationRepository():
             cursor = main_db_connection.cursor()
 
             query = """
-                SELECT id, date_scan, classification, id_database, deleted
+                SELECT id, date_scan, classification, id_database, deleted, id_user
                 FROM historic_scan
                 WHERE id_database = %s
             """
@@ -230,7 +232,8 @@ class DataBaseClasificationRepository():
                     date_scan = result[1],
                     classification = result[2],
                     id_database = result[3],
-                    deleted = result[4]
+                    deleted = result[4],
+                    user_id = result[5],
                 ))
 
             return historic_scan_list
@@ -270,17 +273,17 @@ class DataBaseClasificationRepository():
         except Exception as e:
             raise HTTPException(status_code=404, detail=f"{e}") from e
         
-    def insert_information_classification(data_type, expression):
+    def insert_information_classification(data_type, expression, user_id):
         try:
             db_connection = DataBaseDlpConnection()
             main_db_connection = db_connection.connect()
             cursor = main_db_connection.cursor()
             
             insert_query = """
-                INSERT INTO information_classification (information_type, information_expression)
-                VALUES (%s, %s);
+                INSERT INTO information_classification (information_type, information_expression, id_user)
+                VALUES (%s, %s, %s);
             """
-            cursor.execute(insert_query, (data_type, expression))
+            cursor.execute(insert_query, (data_type, expression, user_id))
             main_db_connection.commit()
             cursor.close()
             main_db_connection.close()

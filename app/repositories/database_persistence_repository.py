@@ -17,17 +17,17 @@ class DataBasePersistenceRepository:
         )
         return connection_database.check_connection()
 
-    def insert_data_persistence(data: DatabasePersistenceEntity):
+    def insert_data_persistence(data: DatabasePersistenceEntity, user_id: int):
         try:
             db_connection = DataBaseDlpConnection()
             main_db_connection = db_connection.connect()
             cursor = main_db_connection.cursor()
 
             insert_query = """
-                INSERT INTO database_persistence (host, username, password, port) 
-                VALUES (%s, %s, %s, %s)
+                INSERT INTO database_persistence (host, username, password, port, id_user) 
+                VALUES (%s, %s, %s, %s, %s)
                 """
-            cursor.execute(insert_query, (data.host, data.username, data.password, data.port))
+            cursor.execute(insert_query, (data.host, data.username, data.password, data.port, user_id))
             main_db_connection.commit()
 
             inserted_id = cursor.lastrowid

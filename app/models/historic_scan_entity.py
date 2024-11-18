@@ -2,7 +2,7 @@ import json
 from datetime import datetime
 
 class HistoricScanEntity:
-    def __init__(self, date_scan: str, classification: str, id_database: int, deleted: int, id: int = None):
+    def __init__(self, date_scan: str, classification: str, id_database: int, deleted: int, user_id: int, id: int = None):
         self.id = id
         
         if isinstance(date_scan, str):
@@ -19,4 +19,5 @@ class HistoricScanEntity:
             
         self.id_database = id_database
         self.deleted = deleted
+        self.user_id = user_id
         

@@ -11,7 +11,7 @@ from app.utils.encryption import EncryptionUtils
 
 templates = Jinja2Templates(directory="app/templates")
 
-def database_clasification(id_database):
+def database_clasification(id_database, user_id):
     validation_database = dbcr.check_database_existence(id_database)
 
     if(validation_database is not None):
@@ -31,7 +31,7 @@ def database_clasification(id_database):
         database_names = database_filtered(decrypted_data)
         classification_keywords = information_expression()
         classification_json = field_database_classification(decrypted_data, database_names, classification_keywords)
-        id_saved_scan = save_scan(id_database, classification_json)
+        id_saved_scan = save_scan(id_database, classification_json, user_id)
         
         return {"the historical classification record has been saved with id": f"{id_saved_scan}"}
     else:
@@ -92,7 +92,7 @@ def field_classification(field_tables, classification_keywords):
             classification_list.append(value)
     return classification_list
 
-def save_scan(id_database, classification):
+def save_scan(id_database, classification, user_id):
     time = datetime.now()
     date = time.strftime("%Y-%m-%d %H:%M:%S")
     
@@ -101,7 +101,7 @@ def save_scan(id_database, classification):
     if(len(validate_record) > 0):
         dbcr.update_historic_scan(id_database)
     
-    return dbcr.insert_historic_scan(id_database, classification, date)
+    return dbcr.insert_historic_scan(id_database, classification, date, user_id)
 
 def get_last_scan(id_database):
     validation_database = dbcr.check_database_existence(id_database)
@@ -130,7 +130,7 @@ def get_data_render(request: Request, id_database):
         "historic_scan": historic_scan
     }) 
     
-def insert_information_classification(request: RequestInformationClassification):
+def insert_information_classification(request: RequestInformationClassification, user_id: int):
     uppercase_expression = request.information_expression.upper()
-    return dbcr.insert_information_classification(request.information_type, uppercase_expression)
+    return dbcr.insert_information_classification(request.information_type, uppercase_expression, user_id)
     
