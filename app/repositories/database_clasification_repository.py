@@ -216,9 +216,9 @@ class DataBaseClasificationRepository():
             """
             if deleted is not None:
                 query += " AND deleted = %s"
-                cursor.execute(query, (id_database, deleted))  # Ejecutar con 'deleted'
+                cursor.execute(query, (id_database, deleted))
             else:
-                cursor.execute(query, (id_database,))  # Ejecutar solo con 'id_database'
+                cursor.execute(query, (id_database,))
                 
             results = cursor.fetchall()
             cursor.close()
