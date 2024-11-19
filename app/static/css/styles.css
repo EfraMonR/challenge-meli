@@ -1,0 +1,124 @@
+/* General Reset */
+body, h1, h2, h3, h4, p, table {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Estilo general */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+    line-height: 1.6;
+    padding: 1rem;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Header */
+header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+header h1 {
+    font-size: 2.5rem;
+    color: #5D7B9D;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+}
+
+/* Sección de Escaneos */
+.scan, .historic-scan {
+    margin-bottom: 2rem;
+}
+
+.scan h2, .historic-scan h2 {
+    font-size: 1.8rem;
+    color: #5D7B9D;
+    margin-bottom: 1rem;
+}
+
+.database, .table {
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    border-left: 5px solid #5D7B9D;
+    background: #f9fafc;
+    border-radius: 6px;
+}
+
+.database h3, .table h4 {
+    font-size: 1.4rem;
+    color: #333;
+    margin-bottom: 0.8rem;
+    font-weight: bold;
+}
+
+/* Tablas */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    font-size: 0.9rem;
+}
+
+table thead tr {
+    background-color: #5D7B9D;
+    color: #fff;
+    text-align: left;
+}
+
+table th, table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+}
+
+table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+table tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+table td {
+    color: #333;
+}
+
+/* Sin registros */
+table tbody tr td[colspan] {
+    text-align: center;
+    color: #888;
+    font-style: italic;
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+    .container {
+        padding: 1rem;
+    }
+
+    header h1 {
+        font-size: 2rem;
+    }
+
+    .scan h2, .historic-scan h2 {
+        font-size: 1.5rem;
+    }
+
+    .database h3, .table h4 {
+        font-size: 1.2rem;
+    }
+
+    table {
+        font-size: 0.8rem;
+    }
+}
