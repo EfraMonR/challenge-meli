@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clasificación de Escaneos</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='css/styles.css') }}">
+    <link rel="icon" href="{{ url_for('static', path='images/favicon.png') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Resultado de Clasificación</h1>
+        </header>
+        
+        <!-- Validación para el contenido principal -->
+        {% if response %}
+            {% for scan in response %}
+                <section class="scan">
+                    <h2>Escaneo de Base de Datos</h2>
+                    <p><strong>ID Base de Datos:</strong> {{ scan.id_database }}</p>
+                    <p><strong>Fecha del Escaneo:</strong> {{ scan.date_scan }}</p>
+                    
+                    <!-- Clasificaciones -->
+                    {% for db in scan.classification %}
+                        <div class="database">
+                            <h3>Base de Datos: {{ db.databasename }}</h3>
+                            
+                            <!-- Tablas -->
+                            {% for table in db.tables %}
+                                <div class="table">
+                                    <h4>Tabla: {{ table.nametable }}</h4>
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Campo</th>
+                                                <th scope="col">Valor</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for field in table.fields %}
+                                                {% for key, value in field.items() %}
+                                                    <tr>
+                                                        <td>{{ key }}</td>
+                                                        <td>{{ value }}</td>
+                                                    </tr>
+                                                {% endfor %}
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                </section>
+            {% endfor %}
+        {% else %}
+            <p>No hay resultados para mostrar.</p>
+        {% endif %}
+        
+        <!-- Historial de Escaneos -->
+        <section class="historic-scan">
+            <h2>Historial de Escaneos</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Clasificación</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if historic_scan %}
+                        {% for scan in historic_scan %}
+                            <tr>
+                                <td>{{ scan.date_scan }}</td>
+                                <td>{{ scan.classification }}</td>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="5">No hay registros históricos disponibles.</td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </section>
+    </div>
+</body>
+</html>
